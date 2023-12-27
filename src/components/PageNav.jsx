@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "./Logo";
 import styles from "./PageNav.module.css";
 
-function NavPage() {
+function PageNav() {
   return (
     <nav className={styles.nav}>
       <Logo />
@@ -25,4 +25,4 @@ function NavPage() {
   );
 }
 
-export default NavPage;
+export default PageNav;
