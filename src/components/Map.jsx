@@ -1,5 +1,6 @@
 /** @format */
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   MapContainer,
   TileLayer,
@@ -8,24 +9,24 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+
 import styles from "./Map.module.css";
 import { useEffect, useState } from "react";
 import { useCities } from "../context/CitiesContext";
-import Button from "./Button";
-import { useGeolocation } from "../hooks/UseGeoLocation";
+import { useGeolocation } from "../hooks/useGeolocation";
 import { useUrlPosition } from "../hooks/useUrlPosition";
+import Button from "./Button";
 
 function Map() {
+  const { cities } = useCities();
   const [mapPosition, setMapPosition] = useState([40, 0]);
   const {
     isLoading: isLoadingPosition,
     position: geolocationPosition,
     getPosition,
   } = useGeolocation();
-
-  const { cities } = useCities();
-
   const [mapLat, mapLng] = useUrlPosition();
+
   useEffect(
     function () {
       if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
@@ -37,7 +38,6 @@ function Map() {
     function () {
       if (geolocationPosition)
         setMapPosition([geolocationPosition.lat, geolocationPosition.lng]);
-      console.log(geolocationPosition);
     },
     [geolocationPosition]
   );
@@ -49,6 +49,7 @@ function Map() {
           {isLoadingPosition ? "Loading..." : "Use your position"}
         </Button>
       )}
+
       <MapContainer
         center={mapPosition}
         zoom={6}
@@ -76,6 +77,7 @@ function Map() {
     </div>
   );
 }
+
 function ChangeCenter({ position }) {
   const map = useMap();
   map.setView(position);
@@ -84,10 +86,10 @@ function ChangeCenter({ position }) {
 
 function DetectClick() {
   const navigate = useNavigate();
+
   useMapEvents({
-    click: (e) => {
-      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`);
-    },
+    click: (e) => navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
   });
 }
+
 export default Map;
